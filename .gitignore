@@ -1,14 +1,6 @@
 
-.idea/deployment.xml
-
-.idea/misc.xml
-
-.idea/modules.xml
-
-.idea/probes.iml
-
-.idea/webServers.xml
-
-.idea/workspace.xml
+.idea/*
 
 argoss_libs/cache/ls
+__cache__/
+

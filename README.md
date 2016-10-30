@@ -21,6 +21,8 @@ Lib description
 Les tests realisés sur les mêmes OID utilisent SNMPWalk command.
 
 Resultats en seconds (s):
+</br>
+
 | Fois appeller  | EasySNMP       | NetSNMP        | PySNMP         | NativeSNMP    |
 | :------------- | :------------- | :------------- | :------------- |:------------- |
 | 1 x            | 0.013871s      | **0.003734s**  | 0.516798s      | 0.005819s     |
@@ -44,7 +46,7 @@ _EasySNMP manges very well big quantity of requests using single SNMP session._
 
 ### Diagrame Generale d'une sonde en utilisant RequestManager et Cache
 ***
-![Diagrame d'une sonde](sonde_diagram.svg)
+![Diagrame d'une sonde](docs/img/sonde_diagram.svg)
 
 #### Benchmark Tests using Icinga2 tasks load
 
@@ -55,6 +57,6 @@ Not done yet!!
 * check_disk_io (checking disk input/output)
 * check_disk_load (checking machine load)
 * check_linux_cpu (checking CPU on linux Machines)
-* to be continued... 
+* to be continued...
 
 Copyright (c) 2016 Aurimas NAVICKAS All Rights Reserved.
