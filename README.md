@@ -56,7 +56,7 @@ Not done yet!!
 
 ### Plugins List
 
-* [Check Disk I/O](#check_disk_io) (checking disk input/output)
+* [Check Disk I/O](#user-content-check_disk_io) (checking disk input/output)
 * check_disk_load (checking machine load)
 * check_linux_cpu (checking CPU on linux Machines)
 * ...
