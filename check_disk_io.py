@@ -1,4 +1,4 @@
-#!/opt/venv/bin python
+#!/opt/venv/bin/python
 # -*- coding: utf-8 -*-
 """ Icinga2 Plugin: Check Disk I/O
 Method to get Machine Disk I/O activity

@@ -1,4 +1,4 @@
-#!/opt/venv/bin python
+#!/opt/venv/bin/python
 # -*- coding: UTF-8
 """ Icinga2 Plugin: Check Linux Load
 Method to get Machine Disk I/O activity
