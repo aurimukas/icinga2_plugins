@@ -4,10 +4,10 @@ Lib description
 
 ### Python Pip's utilisés:
 ***
-* Redis (***Key** => **Val** DB stockage dans le RAM*)
-* Hiredis (***C** Interface pour Redis*)
-* EasySNMP (*Net-SNMP lib **Python** implementation en **Cython***)
-* Nagiosplugin (*Nagios plugin lib pour **Python***)
+* Redis (_**Key** => **Val** DB stockage dans le RAM_)
+* Hiredis (_**C** Interface pour Redis_)
+* EasySNMP (_Net-SNMP lib **Python** implementation en **Cython**_)
+* Nagiosplugin (_Nagios plugin lib pour **Python**_)
 
 ### Pourqoi EasySNMP
 ***
@@ -46,7 +46,7 @@ _EasySNMP manges very well big quantity of requests using single SNMP session._
 
 ### Diagrame Generale d'une sonde en utilisant RequestManager et Cache
 ***
-![Diagrame d'une sonde](docs/img/sonde_diagram.svg)
+![Diagrame d'une sonde](https://rawgit.com/aurimukas/icinga2_plugins/master/docs/img/sonde_diagram.svg)
 
 #### Benchmark Tests using Icinga2 tasks load
 
