@@ -1,13 +1,15 @@
 # Icinga2 Plugin with RequetsManager module and Cache/Redis
 
-Lib description
+Icinga2 plugins package using Request Manager to manage requests to machines
+and use Cache when possible thus to remove load on worker machine and 
+reduce UDP requests quantity.
 
 ### Python Pip's used:
 ***
-* Redis (_**Key** => **Val** DB stockage dans le RAM_)
-* Hiredis (_**C** Interface pour Redis_)
-* EasySNMP (_Net-SNMP lib **Python** implementation en **Cython**_)
-* Nagiosplugin (_Nagios plugin lib pour **Python**_)
+* Redis (_**Key** => **Val** DB Database using RAM to stock data_)
+* Hiredis (_**C** Redis C implementation_)
+* EasySNMP (_Net-SNMP lib created using **Cython**_)
+* Nagiosplugin (_Nagios plugin **Python** lib_)
 
 ### Why EasySNMP
 ***
@@ -57,8 +59,8 @@ Not done yet!!
 ### Plugins List
 
 * [Check Disk I/O](#user-content-check_disk_io) (checking disk input/output)
-* check_disk_load (checking machine load)
-* check_linux_cpu (checking CPU on linux Machines)
+* [Check Load](#user-content-check_load) (checking machine load)
+* [Check Linux CPU](#user-content-check_linux_cpu) (checking CPU on linux Machines)
 * ...
 
 ### Plugins
@@ -75,6 +77,7 @@ Not done yet!!
 #### check_disk_io
 ___
 Monitoring disk's I/O data.
+
 ##### Params to pass on function execution:
     -d - Disk to monitor label. a.e. sda, vda etc...
 ##### Calling a function example:
@@ -86,5 +89,37 @@ Monitoring disk's I/O data.
     DISKIO OK - alert_ioread is 0 | alert_ioread=0.0;80.0;90.0 alert_iowrite=0.0;80.0;90.0
 ##### False Results:
     DISKIO UNKNOWN - Error while fetching Indexes. Label: vdd
+    
+#### check_load
+___
+Monitoring machine's load status.
+
+##### Params to pass on function execution:
+    No params to pass
+##### Calling a function example:
+    $ python check_load.py -H 127.0.0.1 -v 2c -c bornan -c 90 -w 80
+##### Performance Data to Return:
+    load_1
+    alert_load_5
+    load_15
+##### Successful Results:
+    SYSTEMLOAD OK - load_15 is 0.15 | alert_load_5=0.0;80.0;90.0 load_15=0.15 load_1=0.0
+##### False Results:
+    SYSTEMLOAD UNKNOWN - Error while ...
+    
+#### check_linux_cpu
+___
+Monitoring Linux machine's CPU activity in %.
+
+##### Params to pass on function execution:
+    No params to pass
+##### Calling a function example:
+    $ python check_linux_cpu.py -H 127.0.0.1 -v 2c -c bornan -c 90 -w 80
+##### Performance Data to Return:
+    alert_cpu_percent
+##### Successful Results:
+    LINUXCPU OK - alert_cpu_percent is 0.75 | alert_cpu_percent=0.75;80.0;90.0
+##### False Results:
+    LINUXCPU UNKNOWN - Error while ...
 
 Copyright (c) 2016 Aurimas NAVICKAS All Rights Reserved.

@@ -93,7 +93,7 @@ class RequestManager(SNMPProbe):
                                                                       indexes['values'][val['index_label']])
 
             if not (exist and contains):
-                indexes = self._get_indexes_from_host(indexes)
+                self._get_indexes_from_host(indexes)
                 self._update_perfdata_from_host(perfdata)
                 exist, contains = self.cache.check_if_exists_and_contains(perfdata_key,
                                                                           indexes['values'][val['index_label']])
