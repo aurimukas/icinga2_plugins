@@ -1,0 +1,30 @@
+argoss_libs.tests package
+=========================
+
+Submodules
+----------
+
+argoss_libs.tests.speed_test module
+-----------------------------------
+
+.. automodule:: argoss_libs.tests.speed_test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+argoss_libs.tests.test module
+-----------------------------
+
+.. automodule:: argoss_libs.tests.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: argoss_libs.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>argoss_libs.cache package &#8212; DISIT  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="DISIT  documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="argoss-libs-cache-package">
+<h1>argoss_libs.cache package<a class="headerlink" href="#argoss-libs-cache-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-argoss_libs.cache.basic_cache">
+<span id="argoss-libs-cache-basic-cache-module"></span><h2>argoss_libs.cache.basic_cache module<a class="headerlink" href="#module-argoss_libs.cache.basic_cache" title="Permalink to this headline">¶</a></h2>
+<p>File name: basic_cache.py
+Author: Aurimas NAVICKAS
+Date created: 14/10/2016
+Date last modified: 19/10/2016 11:53
+Python Version: 3.5.2</p>
+<dl class="class">
+<dt id="argoss_libs.cache.basic_cache.Cache">
+<em class="property">class </em><code class="descclassname">argoss_libs.cache.basic_cache.</code><code class="descname">Cache</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.add_to_list">
+<code class="descname">add_to_list</code><span class="sig-paren">(</span><em>key</em>, <em>*value</em>, <em>*</em>, <em>append=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.add_to_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.add_to_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.add_to_set">
+<code class="descname">add_to_set</code><span class="sig-paren">(</span><em>key</em>, <em>*value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.add_to_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.add_to_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.check_if_exists_and_contains">
+<code class="descname">check_if_exists_and_contains</code><span class="sig-paren">(</span><em>key=None</em>, <em>val=None</em>, <em>value_type='hash'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.check_if_exists_and_contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.check_if_exists_and_contains" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="argoss_libs.cache.basic_cache.Cache.create_hashed_key">
+<em class="property">static </em><code class="descname">create_hashed_key</code><span class="sig-paren">(</span><em>hash_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.create_hashed_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.create_hashed_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a hash key string from given string using md5</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.delete_keys">
+<code class="descname">delete_keys</code><span class="sig-paren">(</span><em>*keys</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.delete_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.delete_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.get_cached_index">
+<code class="descname">get_cached_index</code><span class="sig-paren">(</span><em>base_key</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.get_cached_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.get_cached_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.get_hash_value">
+<code class="descname">get_hash_value</code><span class="sig-paren">(</span><em>key</em>, <em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.get_hash_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.get_hash_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.get_pickled_dict">
+<code class="descname">get_pickled_dict</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.get_pickled_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.get_pickled_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.get_value">
+<code class="descname">get_value</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.get_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.is_in_hash">
+<code class="descname">is_in_hash</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.is_in_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.is_in_hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.is_in_list">
+<code class="descname">is_in_list</code><span class="sig-paren">(</span><em>key=None</em>, <em>value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.is_in_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.is_in_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.is_value">
+<code class="descname">is_value</code><span class="sig-paren">(</span><em>key</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.is_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.is_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.scan_data">
+<code class="descname">scan_data</code><span class="sig-paren">(</span><em>match='*'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.scan_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.scan_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.set_expire">
+<code class="descname">set_expire</code><span class="sig-paren">(</span><em>key</em>, <em>ex_time=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.set_expire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.set_expire" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.set_hash_value">
+<code class="descname">set_hash_value</code><span class="sig-paren">(</span><em>key</em>, <em>field</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.set_hash_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.set_hash_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.set_pickled_dict">
+<code class="descname">set_pickled_dict</code><span class="sig-paren">(</span><em>key</em>, <em>value</em>, <em>expire=None</em>, <em>protocol=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.set_pickled_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.set_pickled_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.cache.basic_cache.Cache.set_value">
+<code class="descname">set_value</code><span class="sig-paren">(</span><em>key</em>, <em>value</em>, <em>ex=None</em>, <em>px=None</em>, <em>nx=False</em>, <em>xx=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/basic_cache.html#Cache.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.basic_cache.Cache.set_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-argoss_libs.cache.helpers">
+<span id="argoss-libs-cache-helpers-module"></span><h2>argoss_libs.cache.helpers module<a class="headerlink" href="#module-argoss_libs.cache.helpers" title="Permalink to this headline">¶</a></h2>
+<p>File name: helpers.py
+Author: Aurimas NAVICKAS
+Date created: 19/10/2016
+Date last modified: 24/10/2016 09:56
+Python Version: 3.5.2</p>
+<dl class="function">
+<dt id="argoss_libs.cache.helpers.camelize">
+<code class="descclassname">argoss_libs.cache.helpers.</code><code class="descname">camelize</code><span class="sig-paren">(</span><em>phrase</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/helpers.html#camelize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.helpers.camelize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert string to Camel Case string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>phrase</strong> &#8211; String to Camel Case</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Camel Case string</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camelize</span><span class="p">(</span><span class="s2">&quot;string_to_camelize&quot;</span><span class="p">)</span>
+<span class="go">&quot;StringToCamelize&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="argoss_libs.cache.helpers.decode_from_b">
+<code class="descclassname">argoss_libs.cache.helpers.</code><code class="descname">decode_from_b</code><span class="sig-paren">(</span><em>value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/helpers.html#decode_from_b"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.helpers.decode_from_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode Bytes Value to String</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; Bytes value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Decoded String</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="argoss_libs.cache.helpers.pickle_data">
+<code class="descclassname">argoss_libs.cache.helpers.</code><code class="descname">pickle_data</code><span class="sig-paren">(</span><em>data=None</em>, <em>protocol=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/helpers.html#pickle_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.helpers.pickle_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pickle data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Data to pickle</li>
+<li><strong>protocol</strong> &#8211; Pickle compression protocol</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Pickled data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="argoss_libs.cache.helpers.strip_string">
+<code class="descclassname">argoss_libs.cache.helpers.</code><code class="descname">strip_string</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/helpers.html#strip_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.helpers.strip_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip strings from non-ASCII chars</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; String to strip</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Stripped string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="argoss_libs.cache.helpers.unpickle_data">
+<code class="descclassname">argoss_libs.cache.helpers.</code><code class="descname">unpickle_data</code><span class="sig-paren">(</span><em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/cache/helpers.html#unpickle_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.cache.helpers.unpickle_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpickle data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; Pickled data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Unpickled data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-argoss_libs.cache">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-argoss_libs.cache" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">argoss_libs.cache package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.cache.basic_cache">argoss_libs.cache.basic_cache module</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.cache.helpers">argoss_libs.cache.helpers module</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.cache">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/argoss_libs.cache.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Navickas Aurimas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/argoss_libs.cache.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

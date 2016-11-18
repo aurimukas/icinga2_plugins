@@ -16,3 +16,6 @@ pysmi==0.0.7
 redis==2.10.5
 requests==2.11.1
 xmltodict==0.10.2
+pandas
+celery
+sphinx

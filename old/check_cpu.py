@@ -25,8 +25,12 @@ from nagiosplugin import (
     CheckError,
     Metric,
     Check,
-    ScalarContext
+    ScalarContext,
+    guarded
 )
+import logging
+
+_log = logging.getLogger('nagiosplugin')
 
 __author__ = "Aurimas NAVICKAS"
 
@@ -35,15 +39,36 @@ INDEXES = {
     'values': {}
 }
 
+OS_OIDS = {
+    'check_linux_cpu': '.1.3.6.1.2.1.25.3.3.1.2',
+    'check_sun_cpu': '.1.3.6.1.4.1.2021.11.11.0',
+    'check_windows_cpu': '.1.3.6.1.2.1.25.3.3.1.2',
+    'check_fortinet_cpu': '.1.3.6.1.4.1.12356.101.4.1.3.0',
+    'check_fortinet_5103_cpu': '.1.3.6.1.4.1.12356.106.4.1.2.0',
+    'check_cisco_cpu': '.1.3.6.1.4.1.9.2.1.57.0',
+    'check_cisco_nexus_cpu': '.1.3.6.1.4.1.9.9.305.1.1.1.0',
+    'check_cisco_asa_cpu': '.1.3.6.1.4.1.9.9.109.1.1.1.1.4',
+    'check_alteon_cpu': '.1.3.6.1.4.1.1872.2.5.1.2.2.3'
+}
+
 PERFDATA = {
-    'oids': ['.1.3.6.1.2.1.25.3.3.1.2'],
+    'oids': [],
     'data': {
         'alert_cpu_percent': {'oid': None, 'value': None, 'index_label': None}
     }
 }
 
 
-class LinuxCPU(RequestManager):
+class CheckCPU(RequestManager):
+
+    def __init__(self, host, port, community, version, system):
+        super(CheckCPU, self).__init__(host, port, community, version)
+
+        self.system = system
+        if system in OS_OIDS:
+            PERFDATA['oids'].append(OS_OIDS[system])
+        else:
+            PERFDATA['oids'].append(OS_OIDS[0])
 
     def probe(self):
         cpus = []
@@ -52,15 +77,16 @@ class LinuxCPU(RequestManager):
         if len(cpus):
             PERFDATA['data']['alert_cpu_percent']['value'] = sum(float(r.value) for r in cpus) / len(cpus)
 
-        try:
-            yield Metric('alert_cpu_percent', PERFDATA['data']['alert_cpu_percent']['value'], None,
-                         context='alert_cpu_percent')
-        except Exception as e:
-            raise CheckError(e)
+        return self.yield_metrics(PERFDATA['data'])
 
+
+@guarded
 def main():
     # Base function which is calling main Monitoring functions
-    args = RequestManager.default_args('Check Linux CPU')  # Initiating default args
+    args = RequestManager.default_args('Check CPU')  # Initiating default args
+
+    # Adding some extra args needed for this method
+    args.add_argument('--sys', '-s', required=True, type=str, help='System Name')
 
     pargs = args.parse_args()  # Parsing given args
     resources = []
@@ -74,10 +100,10 @@ def main():
 
     # Calling Nagiosplugin Check function to get translated monitoring data
     check = Check(
-        LinuxCPU(pargs.host, pargs.port, pargs.community, pargs.version),
+        CheckCPU(pargs.host, pargs.port, pargs.community, pargs.version, pargs.sys),
         *resources
     )
-    check.main()
+    check.main(pargs.verbose)
 
 if __name__ == '__main__':
     main()

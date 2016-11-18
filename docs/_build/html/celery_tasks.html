@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>celery_tasks module &#8212; DISIT  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="DISIT  documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-celery_tasks">
+<span id="celery-tasks-module"></span><h1>celery_tasks module<a class="headerlink" href="#module-celery_tasks" title="Permalink to this headline">¶</a></h1>
+<p>Celery App Tasks module.</p>
+<dl class="class">
+<dt id="celery_tasks.TaskCallback">
+<em class="property">class </em><code class="descclassname">celery_tasks.</code><code class="descname">TaskCallback</code><a class="reference internal" href="_modules/celery_tasks.html#TaskCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#celery_tasks.TaskCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">celery.task.base.Task</span></code></p>
+<p>Task class which extends Celery Base Task class.</p>
+<p>Static Class params changed:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>expires</strong> &#8211; Task Expiration in queue if not launched in seconds</li>
+<li><strong>db_expires</strong> &#8211; Redis Task will expire in given time in seconds</li>
+<li><strong>cache</strong> &#8211; Initialized Redis management module.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.acks_late">
+<code class="descname">acks_late</code><em class="property"> = False</em><a class="headerlink" href="#celery_tasks.TaskCallback.acks_late" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.cache">
+<code class="descname">cache</code><em class="property"> = &lt;argoss_libs.cache.basic_cache.Cache object&gt;</em><a class="headerlink" href="#celery_tasks.TaskCallback.cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.db_expires">
+<code class="descname">db_expires</code><em class="property"> = 600</em><a class="headerlink" href="#celery_tasks.TaskCallback.db_expires" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.delivery_mode">
+<code class="descname">delivery_mode</code><em class="property"> = 2</em><a class="headerlink" href="#celery_tasks.TaskCallback.delivery_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.exchange_type">
+<code class="descname">exchange_type</code><em class="property"> = 'direct'</em><a class="headerlink" href="#celery_tasks.TaskCallback.exchange_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.expires">
+<code class="descname">expires</code><em class="property"> = 50</em><a class="headerlink" href="#celery_tasks.TaskCallback.expires" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.ignore_result">
+<code class="descname">ignore_result</code><em class="property"> = False</em><a class="headerlink" href="#celery_tasks.TaskCallback.ignore_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.name">
+<code class="descname">name</code><em class="property"> = 'celery_tasks.TaskCallback'</em><a class="headerlink" href="#celery_tasks.TaskCallback.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="celery_tasks.TaskCallback.on_failure">
+<code class="descname">on_failure</code><span class="sig-paren">(</span><em>exc</em>, <em>task_id</em>, <em>args</em>, <em>kwargs</em>, <em>einfo</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/celery_tasks.html#TaskCallback.on_failure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#celery_tasks.TaskCallback.on_failure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error handler.</p>
+<p>This is run by the worker when the task fails.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>exc (Exception): The exception raised by the task.
+task_id (str): Unique id of the failed task.
+args (Tuple): Original arguments for the task that failed.
+kwargs (Dict): Original keyword arguments for the task that failed.
+einfo (~billiard.einfo.ExceptionInfo): Exception information.</dd>
+<dt>Returns:</dt>
+<dd>None: The return value of this handler is ignored.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="celery_tasks.TaskCallback.on_success">
+<code class="descname">on_success</code><span class="sig-paren">(</span><em>retval</em>, <em>task_id</em>, <em>args</em>, <em>kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/celery_tasks.html#TaskCallback.on_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#celery_tasks.TaskCallback.on_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Success handler.</p>
+<p>Run by the worker if the task executes successfully.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>retval (Any): The return value of the task.
+task_id (str): Unique id of the executed task.
+args (Tuple): Original arguments for the executed task.
+kwargs (Dict): Original keyword arguments for the executed task.</dd>
+<dt>Returns:</dt>
+<dd>None: The return value of this handler is ignored.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.rate_limit">
+<code class="descname">rate_limit</code><em class="property"> = None</em><a class="headerlink" href="#celery_tasks.TaskCallback.rate_limit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.reject_on_worker_lost">
+<code class="descname">reject_on_worker_lost</code><em class="property"> = None</em><a class="headerlink" href="#celery_tasks.TaskCallback.reject_on_worker_lost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.request_stack">
+<code class="descname">request_stack</code><em class="property"> = &lt;celery.utils.threads._LocalStack object&gt;</em><a class="headerlink" href="#celery_tasks.TaskCallback.request_stack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.serializer">
+<code class="descname">serializer</code><em class="property"> = 'json'</em><a class="headerlink" href="#celery_tasks.TaskCallback.serializer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.store_errors_even_if_ignored">
+<code class="descname">store_errors_even_if_ignored</code><em class="property"> = False</em><a class="headerlink" href="#celery_tasks.TaskCallback.store_errors_even_if_ignored" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.track_started">
+<code class="descname">track_started</code><em class="property"> = False</em><a class="headerlink" href="#celery_tasks.TaskCallback.track_started" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery_tasks.TaskCallback.typing">
+<code class="descname">typing</code><em class="property"> = True</em><a class="headerlink" href="#celery_tasks.TaskCallback.typing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="celery_tasks.main">
+<code class="descclassname">celery_tasks.</code><code class="descname">main</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/celery_tasks.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#celery_tasks.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates Nagios context elements and launches Nagios check</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cls</strong> &#8211; Initialized Method class</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Nagios check response</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/celery_tasks.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Navickas Aurimas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/celery_tasks.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

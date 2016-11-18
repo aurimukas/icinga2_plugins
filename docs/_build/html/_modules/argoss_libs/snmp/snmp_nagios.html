@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>argoss_libs.snmp.snmp_nagios &#8212; DISIT  documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="DISIT  documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for argoss_libs.snmp.snmp_nagios</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">importlib</span>
+<span class="n">sys</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;sys&#39;</span><span class="p">)</span>
+<span class="n">traceback</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;traceback&#39;</span><span class="p">)</span>
+<span class="n">nagios</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;nagiosplugin&#39;</span><span class="p">)</span>
+<span class="c1">#import nagiosplugin as nagios</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">nagiosplugin.runtime</span> <span class="k">import</span> <span class="n">Runtime</span>
+
+
+<div class="viewcode-block" id="guarded"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.guarded">[docs]</a><span class="k">def</span> <span class="nf">guarded</span><span class="p">(</span><span class="n">original_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Runs a function nagiosplugin&#39;s Runtime environment.</span>
+
+<span class="sd">    `guarded` makes the decorated function behave correctly with respect</span>
+<span class="sd">    to the Nagios plugin API if it aborts with an uncaught exception or</span>
+<span class="sd">    a timeout. It exits with an *unknown* exit code and prints a</span>
+<span class="sd">    traceback in a format acceptable by Nagios.</span>
+
+<span class="sd">    This function should be used as a decorator for the script&#39;s `main`</span>
+<span class="sd">    function.</span>
+
+<span class="sd">    :param verbose: Optional keyword parameter to control verbosity</span>
+<span class="sd">        level during early execution (before</span>
+<span class="sd">        :meth:`~nagiosplugin.Check.main` has been called). For example,</span>
+<span class="sd">        use `@guarded(verbose=0)` to turn tracebacks in that phase off.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_decorate</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+            <span class="n">runtime</span> <span class="o">=</span> <span class="n">SnmpRuntime</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">runtime</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">nagios</span><span class="o">.</span><span class="n">Timeout</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">runtime</span><span class="o">.</span><span class="n">_handle_exception</span><span class="p">(</span>
+                    <span class="s1">&#39;Timeout: check execution aborted after </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">exc</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">runtime</span><span class="o">.</span><span class="n">_handle_exception</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">if</span> <span class="n">original_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">original_function</span><span class="p">),</span> <span class="p">(</span>
+            <span class="s1">&#39;Function </span><span class="si">{!r}</span><span class="s1"> not callable. Forgot to add &quot;verbose=&quot; keyword?&#39;</span><span class="o">.</span>
+            <span class="nb">format</span><span class="p">(</span><span class="n">original_function</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">_decorate</span><span class="p">(</span><span class="n">original_function</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_decorate</span></div>
+
+
+<div class="viewcode-block" id="SnmpRuntime"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.SnmpRuntime">[docs]</a><span class="k">class</span> <span class="nc">SnmpRuntime</span><span class="p">(</span><span class="n">Runtime</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_handle_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">statusline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">exc_type</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">UNKNOWN: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">statusline</span> <span class="ow">or</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception_only</span><span class="p">(</span>
+                <span class="n">exc_type</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">add_longoutput</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exitcode</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exitcode</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SnmpRuntime.execute"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.SnmpRuntime.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check</span> <span class="o">=</span> <span class="n">check</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
+            <span class="n">with_timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exitcode</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnmpRuntime.sysexit"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.SnmpRuntime.sysexit">[docs]</a>    <span class="k">def</span> <span class="nf">sysexit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exit code&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exitcode</span></div></div>
+
+
+<div class="viewcode-block" id="SnmpCheck"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.SnmpCheck">[docs]</a><span class="k">class</span> <span class="nc">SnmpCheck</span><span class="p">(</span><span class="n">nagios</span><span class="o">.</span><span class="n">Check</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SnmpCheck.main"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.SnmpCheck.main">[docs]</a>    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;All-in-one control delegation to the runtime environment.</span>
+
+<span class="sd">        Get a :class:`~nagiosplugin.runtime.Runtime` instance and</span>
+<span class="sd">        perform all phases: run the check (via :meth:`__call__`), print</span>
+<span class="sd">        results and exit the program with an appropriate status code.</span>
+
+<span class="sd">        :param verbose: output verbosity level between 0 and 3</span>
+<span class="sd">        :param timeout: abort check execution with a :exc:`Timeout`</span>
+<span class="sd">            exception after so many seconds (use 0 for no timeout)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">runtime</span> <span class="o">=</span> <span class="n">SnmpRuntime</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">runtime</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="InterfaceStatusContext"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.InterfaceStatusContext">[docs]</a><span class="k">class</span> <span class="nc">InterfaceStatusContext</span><span class="p">(</span><span class="n">nagios</span><span class="o">.</span><span class="n">ScalarContext</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">warning</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fmt_metric</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">result_cls</span><span class="o">=</span><span class="n">nagios</span><span class="o">.</span><span class="n">Result</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InterfaceStatusContext</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">warning</span><span class="o">=</span><span class="n">warning</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="n">critical</span><span class="p">,</span>
+                                                     <span class="n">fmt_metric</span><span class="o">=</span><span class="n">fmt_metric</span><span class="p">,</span> <span class="n">result_cls</span><span class="o">=</span><span class="n">result_cls</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InterfaceStatusContext.evaluate"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.snmp_nagios.InterfaceStatusContext.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_cls</span><span class="p">(</span><span class="n">nagios</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;There is a problem with your interface status&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_cls</span><span class="p">(</span><span class="n">nagios</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">Critical</span><span class="p">,</span> <span class="n">hint</span><span class="o">=</span><span class="n">hint</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Navickas Aurimas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

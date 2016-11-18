@@ -1,0 +1,530 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>argoss_libs.snmp package &#8212; DISIT  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="DISIT  documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="argoss-libs-snmp-package">
+<h1>argoss_libs.snmp package<a class="headerlink" href="#argoss-libs-snmp-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-argoss_libs.snmp.perfdata">
+<span id="argoss-libs-snmp-perfdata-module"></span><h2>argoss_libs.snmp.perfdata module<a class="headerlink" href="#module-argoss_libs.snmp.perfdata" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="argoss_libs.snmp.perfdata.PerfDataItem">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.perfdata.</code><code class="descname">PerfDataItem</code><span class="sig-paren">(</span><em>key=None</em>, <em>oid=None</em>, <em>value=0</em>, <em>index_label=None</em>, <em>priority=0</em>, <em>calculation=False</em>, <em>value_type='%i'</em>, <em>return_value=False</em>, <em>context=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/perfdata.html#PerfDataItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.perfdata.PerfDataItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="argoss_libs.snmp.perfdata.PerfDataItem.TYPES">
+<code class="descname">TYPES</code><em class="property"> = {'%i': &lt;class 'int'&gt;, '%f': &lt;class 'float'&gt;, '%s': &lt;class 'str'&gt;, '%b': &lt;class 'bytes'&gt;}</em><a class="headerlink" href="#argoss_libs.snmp.perfdata.PerfDataItem.TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-argoss_libs.snmp.request_manager">
+<span id="argoss-libs-snmp-request-manager-module"></span><h2>argoss_libs.snmp.request_manager module<a class="headerlink" href="#module-argoss_libs.snmp.request_manager" title="Permalink to this headline">¶</a></h2>
+<p>Request Manager module
+Request Manager which manages all method calls to get SNMP monitoring data from cache or from the Machine.</p>
+<p>File name: request_manager.py
+Author: Aurimas NAVICKAS
+Date created: 19/10/2016
+Python Version: 3.5.2</p>
+<dl class="class">
+<dt id="argoss_libs.snmp.request_manager.Request">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.request_manager.</code><code class="descname">Request</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>community</em>, <em>version</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#Request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argoss_libs.snmp.toolkit.SNMPToolkit" title="argoss_libs.snmp.toolkit.SNMPToolkit"><code class="xref py py-class docutils literal"><span class="pre">argoss_libs.snmp.toolkit.SNMPToolkit</span></code></a></p>
+<p>Extended EasySNMP class to make queries to SNMP</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="argoss_libs.snmp.request_manager.RequestManager">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.request_manager.</code><code class="descname">RequestManager</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>community</em>, <em>version</em>, <em>perfdata</em>, <em>indexes</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">nagiosplugin.resource.Resource</span></code></p>
+<p>RequestManager class to manage every SNMP call to host/equipment or getting info from REDIS/Cache</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>INDEX_TTL</strong> &#8211; Time in seconds to keep index table cached</li>
+<li><strong>PERFDATA_TTL</strong> &#8211; Time in seconds to keep Perfdata table in cache</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.INDEX_TTL">
+<code class="descname">INDEX_TTL</code><em class="property"> = 86400</em><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.INDEX_TTL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.PERFDATA_TTL">
+<code class="descname">PERFDATA_TTL</code><em class="property"> = 120</em><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.PERFDATA_TTL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.apply_cached_perfdata">
+<code class="descname">apply_cached_perfdata</code><span class="sig-paren">(</span><em>cached_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.apply_cached_perfdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.apply_cached_perfdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies Cache data from redis to class perfdata List to evaluate calculations later</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cached_data</strong> &#8211; Cached data dictionary to apply to class perfdata</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Applies class perfdata variable</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.default_args">
+<em class="property">static </em><code class="descname">default_args</code><span class="sig-paren">(</span><em>description</em>, <em>port=161</em>, <em>version=2</em>, <em>warning=80.0</em>, <em>critical=90.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.default_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.default_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static Method which prepares mostly used args for the methods</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>description</strong> &#8211; Description of the method which uses this args</li>
+<li><strong>port</strong> &#8211; Machine&#8217;s SNMP port</li>
+<li><strong>version</strong> &#8211; SNMP version</li>
+<li><strong>warning</strong> &#8211; warning level</li>
+<li><strong>critical</strong> &#8211; critical level</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Object with defined args</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.eval_expressions">
+<code class="descname">eval_expressions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.eval_expressions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.eval_expressions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates given expressions using Pandas Data Frame Object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.prepare_cache_perfdata">
+<em class="property">static </em><code class="descname">prepare_cache_perfdata</code><span class="sig-paren">(</span><em>perfdata</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.prepare_cache_perfdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.prepare_cache_perfdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares class perfdata variable to be cached in Redis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>perfdata</strong> &#8211; Class perfdata variable</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of dictionaries of perfdata attributes.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.update_indexes">
+<code class="descname">update_indexes</code><span class="sig-paren">(</span><em>update_from_host=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.update_indexes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.update_indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update indexes using cache or SNMP call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_from_host</strong> &#8211; bool which force to update indexes from Machine&#8217;s SNMP</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Updated indexes dict with index values</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.update_perfdata_from_dataframe">
+<code class="descname">update_perfdata_from_dataframe</code><span class="sig-paren">(</span><em>dataFrame</em>, <em>index=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.update_perfdata_from_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.update_perfdata_from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates class perfdata from Pandas Dataframe object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataFrame</strong> &#8211; Pandas dataframe object</li>
+<li><strong>index</strong> &#8211; Line(index) number in dataframe which we need to use</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">updates class variables</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.update_performance_data">
+<code class="descname">update_performance_data</code><span class="sig-paren">(</span><em>force_update_perfdata_from_host=False</em>, <em>update_indexes=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.update_performance_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.update_performance_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update performance data dictionary from cache or SNMP</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>force_update_perfdata_from_host</strong> &#8211; Bool which tells to update perfdata from SNMP</li>
+<li><strong>update_indexes</strong> &#8211; Do we need to update indexes while updating perfdata</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Updates Perfdata and indexes (if True) in class variables.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.request_manager.RequestManager.yield_metrics">
+<code class="descname">yield_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/request_manager.html#RequestManager.yield_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.request_manager.RequestManager.yield_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield Nagios Metric from class perfdata</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Yields Nagios Metrics</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-argoss_libs.snmp.snmp_nagios">
+<span id="argoss-libs-snmp-snmp-nagios-module"></span><h2>argoss_libs.snmp.snmp_nagios module<a class="headerlink" href="#module-argoss_libs.snmp.snmp_nagios" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="argoss_libs.snmp.snmp_nagios.InterfaceStatusContext">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.snmp_nagios.</code><code class="descname">InterfaceStatusContext</code><span class="sig-paren">(</span><em>name</em>, <em>warning=None</em>, <em>critical=None</em>, <em>fmt_metric=None</em>, <em>result_cls=&lt;class 'nagiosplugin.result.Result'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#InterfaceStatusContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.InterfaceStatusContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">nagiosplugin.context.ScalarContext</span></code></p>
+<dl class="method">
+<dt id="argoss_libs.snmp.snmp_nagios.InterfaceStatusContext.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>metric</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#InterfaceStatusContext.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.InterfaceStatusContext.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="argoss_libs.snmp.snmp_nagios.SnmpCheck">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.snmp_nagios.</code><code class="descname">SnmpCheck</code><span class="sig-paren">(</span><em>*objects</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#SnmpCheck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.SnmpCheck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">nagiosplugin.check.Check</span></code></p>
+<dl class="method">
+<dt id="argoss_libs.snmp.snmp_nagios.SnmpCheck.main">
+<code class="descname">main</code><span class="sig-paren">(</span><em>verbose=None</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#SnmpCheck.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.SnmpCheck.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>All-in-one control delegation to the runtime environment.</p>
+<p>Get a <code class="xref py py-class docutils literal"><span class="pre">Runtime</span></code> instance and
+perform all phases: run the check (via <code class="xref py py-meth docutils literal"><span class="pre">__call__()</span></code>), print
+results and exit the program with an appropriate status code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>verbose</strong> &#8211; output verbosity level between 0 and 3</li>
+<li><strong>timeout</strong> &#8211; abort check execution with a <code class="xref py py-exc docutils literal"><span class="pre">Timeout</span></code>
+exception after so many seconds (use 0 for no timeout)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="argoss_libs.snmp.snmp_nagios.SnmpRuntime">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.snmp_nagios.</code><code class="descname">SnmpRuntime</code><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#SnmpRuntime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.SnmpRuntime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">nagiosplugin.runtime.Runtime</span></code></p>
+<dl class="method">
+<dt id="argoss_libs.snmp.snmp_nagios.SnmpRuntime.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>check</em>, <em>verbose=None</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#SnmpRuntime.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.SnmpRuntime.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.snmp_nagios.SnmpRuntime.sysexit">
+<code class="descname">sysexit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#SnmpRuntime.sysexit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.SnmpRuntime.sysexit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="argoss_libs.snmp.snmp_nagios.guarded">
+<code class="descclassname">argoss_libs.snmp.snmp_nagios.</code><code class="descname">guarded</code><span class="sig-paren">(</span><em>original_function=None</em>, <em>verbose=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/snmp_nagios.html#guarded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.snmp_nagios.guarded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a function nagiosplugin&#8217;s Runtime environment.</p>
+<p><cite>guarded</cite> makes the decorated function behave correctly with respect
+to the Nagios plugin API if it aborts with an uncaught exception or
+a timeout. It exits with an <em>unknown</em> exit code and prints a
+traceback in a format acceptable by Nagios.</p>
+<p>This function should be used as a decorator for the script&#8217;s <cite>main</cite>
+function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>verbose</strong> &#8211; Optional keyword parameter to control verbosity
+level during early execution (before
+<code class="xref py py-meth docutils literal"><span class="pre">main()</span></code> has been called). For example,
+use <cite>&#64;guarded(verbose=0)</cite> to turn tracebacks in that phase off.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-argoss_libs.snmp.toolkit">
+<span id="argoss-libs-snmp-toolkit-module"></span><h2>argoss_libs.snmp.toolkit module<a class="headerlink" href="#module-argoss_libs.snmp.toolkit" title="Permalink to this headline">¶</a></h2>
+<p>File name: toolkit.py
+Author: Sacha TREMOUREUX, Aurimas NAVICKAS
+Date created: 19/10/2016
+Date last modified: 19/10/2016 15:39
+Python Version: 3.5.2</p>
+<dl class="class">
+<dt id="argoss_libs.snmp.toolkit.SNMPToolkit">
+<em class="property">class </em><code class="descclassname">argoss_libs.snmp.toolkit.</code><code class="descname">SNMPToolkit</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>community</em>, <em>version</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/toolkit.html#SNMPToolkit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.toolkit.SNMPToolkit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Initiate SNMP connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>host</strong> &#8211; str Host to fetch.</li>
+<li><strong>port</strong> &#8211; int SNMP port.</li>
+<li><strong>community</strong> &#8211; string SNMP community.</li>
+<li><strong>version</strong> &#8211; int SNMP version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="argoss_libs.snmp.toolkit.SNMPToolkit.fetch_oid">
+<code class="descname">fetch_oid</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/toolkit.html#SNMPToolkit.fetch_oid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.toolkit.SNMPToolkit.fetch_oid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an object containing high-level response from
+a SNMP GET request.
+SNMP errors are handled and raised in nagiosplugin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>oid</strong> &#8211; (string) SNMP OID Prefix.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The response value.</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">fetch_oid</span><span class="p">(</span><span class="s1">&#39;1.3.6.1.4.1.9.2.1.57.0&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="s1">&#39;161&#39;</span><span class="p">))</span>
+<span class="go">60.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.toolkit.SNMPToolkit.fetch_table">
+<code class="descname">fetch_table</code><span class="sig-paren">(</span><em>data</em>, <em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/toolkit.html#SNMPToolkit.fetch_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.toolkit.SNMPToolkit.fetch_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append high-level response from a SNMP GETNEXT request into
+a data variable.
+SNMP errors are handled and raised in nagiosplugin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; list List to append.</li>
+<li><strong>oid</strong> &#8211; str SNMP OID Prefix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fetch_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;1.3.6.1.2.1.25.3.3.1.2&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">161</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">[6,1,2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.toolkit.SNMPToolkit.gather_data">
+<code class="descname">gather_data</code><span class="sig-paren">(</span><em>data</em>, <em>oid</em>, <em>valid_sub_oids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/toolkit.html#SNMPToolkit.gather_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.toolkit.SNMPToolkit.gather_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a SNMP GETNEXT over an OID prefix, filter the
+response based on valid suboids and append it on a data variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; list List to append.</li>
+<li><strong>oid</strong> &#8211; str SNMP OID Prefix.</li>
+<li><strong>valid_sub_oids</strong> &#8211; dict&lt;key, label&gt; Sub OIDs to keep.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<p>SNMP GETNEXT dummy response:</p>
+<p>1.3.5.5.1.1: 10</p>
+<p>1.3.5.5.1.2: 20</p>
+<p>1.3.5.5.2.1: 100</p>
+<p>1.3.5.5.2.2: 200</p>
+<p>1.3.5.5.3.1: 1000</p>
+<p>1.3.5.5.3.2: 2000</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gather_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;1.3.5.5&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">161</span><span class="p">,</span>
+<span class="go">{1: &#39;foo&#39;, 3: &#39;bar&#39;})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;foo&#39;: {1: 10, 2: 20}, &#39;bar&#39;: {1: 1000, 2: 2000}}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="argoss_libs.snmp.toolkit.SNMPToolkit.snmp_table">
+<code class="descname">snmp_table</code><span class="sig-paren">(</span><em>oid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/argoss_libs/snmp/toolkit.html#SNMPToolkit.snmp_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#argoss_libs.snmp.toolkit.SNMPToolkit.snmp_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform SNMP GETNEXT request and return a generator.
+As lexicographicMode is turned false, this generator
+stops itself when the end of the prefix is reached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>oid</strong> &#8211; str SNMP OID Prefix.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An array containing raw data.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-argoss_libs.snmp">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-argoss_libs.snmp" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">argoss_libs.snmp package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.snmp.perfdata">argoss_libs.snmp.perfdata module</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.snmp.request_manager">argoss_libs.snmp.request_manager module</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.snmp.snmp_nagios">argoss_libs.snmp.snmp_nagios module</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.snmp.toolkit">argoss_libs.snmp.toolkit module</a></li>
+<li><a class="reference internal" href="#module-argoss_libs.snmp">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/argoss_libs.snmp.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Navickas Aurimas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/argoss_libs.snmp.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

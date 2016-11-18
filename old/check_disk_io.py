@@ -28,8 +28,12 @@ from nagiosplugin import (
     CheckError,
     Metric,
     Check,
-    ScalarContext
+    ScalarContext,
+    guarded
 )
+import logging
+
+_log = logging.getLogger('nagiosplugin')
 
 __author__ = "Aurimas NAVICKAS"
 
@@ -41,8 +45,8 @@ INDEXES = {
 PERFDATA = {
     'oids': [],
     'data': {
-        'alert_ioread': {'oid': '.1.3.6.1.4.1.2021.13.15.1.1.5', 'value': None, 'index_label': 'Load-1'},
-        'alert_iowrite': {'oid': '.1.3.6.1.4.1.2021.13.15.1.1.6', 'value': None, 'index_label': 'Load-5'}
+        'alert_ioread': {'oid': '.1.3.6.1.4.1.2021.13.15.1.1.5', 'value': None, 'index_label': None},
+        'alert_iowrite': {'oid': '.1.3.6.1.4.1.2021.13.15.1.1.6', 'value': None, 'index_label': None}
     }
 }
 
@@ -72,10 +76,9 @@ class DiskIO(RequestManager):
         self.sleep = sleep
         self.io_key = '%s:check_disk_io:%s' % (self.host, self.disk)
 
-    def check_diff(self, primary_index, primary_perfdata):
+    def check_diff(self, primary_perfdata):
         """
         Method to compare I/O data monitored at different times
-        :param primary_index: currently monitored indexes dictionary
         :param primary_perfdata: currently monitored perfdata dictionary
         :return: dictionary with the difference of the activity in time delta
         """
@@ -87,15 +90,10 @@ class DiskIO(RequestManager):
             compare_results['result1'] = result_to_compare
             compare_results['result2'] = primary_perfdata
         else:
-            time.sleep(self.sleep)
-            prim_pd = primary_perfdata.copy()
-            index_to_compare, perfdata_to_compare = self.update_performance_data(primary_index, primary_perfdata)
-            perfdata_to_compare['timestamp'] = time.time()
-            compare_results['result1'] = prim_pd
-            compare_results['result2'] = perfdata_to_compare
+            self.cache.set_pickled_dict(self.io_key, primary_perfdata, expire=COMPARISON_TTL)
+            raise CheckError('No data to compare with')
 
-        self.cache.set_pickled_dict(self.io_key, compare_results['result2'])
-        self.cache.set_expire(self.io_key, COMPARISON_TTL)
+        self.cache.set_pickled_dict(self.io_key, compare_results['result2'], expire=COMPARISON_TTL)
 
         return self.compare_results_data(compare_results['result1'], compare_results['result2'])
 
@@ -133,18 +131,16 @@ class DiskIO(RequestManager):
         Query system state and return metrics. Extending from Nagiosplugin->resource
         :return: yields Nagios Metric params with defined variables and their values
         """
-        index, perfdat = self.update_performance_data(indexes=INDEXES, perfdata=PERFDATA, force_update_perfdata_from_host=True)   # Getting Monitoring Data
+        index, perfdat = self.update_performance_data(indexes=INDEXES, perfdata=PERFDATA,
+                                                      force_update_perfdata_from_host=True)   # Getting Monitoring Data
         perfdat['timestamp'] = time.time()
 
-        diff_results = self.check_diff(primary_index=index, primary_perfdata=perfdat)
+        diff_results = self.check_diff(primary_perfdata=perfdat)
 
-        try:
-            for label in diff_results['data'].keys():
-                yield Metric(label, float(diff_results['data'][label]['value']), None, context=label)
-        except Exception as e:
-            raise CheckError(e)
+        return self.yield_metrics(diff_results['data'])
 
 
+@guarded
 def main():
     # Base function which is calling main Monitoring functions
     args = RequestManager.default_args('Check Disk I/O')    # Initiating default args
@@ -174,7 +170,7 @@ def main():
                        disk=pargs.disk, sleep=getattr(pargs, 'sleep-time', 10)),
                 *resources
             )
-    check.main()
+    check.main(pargs.verbose)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>celery_tasks &#8212; DISIT  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="DISIT  documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for celery_tasks</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: UTF-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Celery App Tasks module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">from</span> <span class="nn">celery_config</span> <span class="k">import</span> <span class="n">app</span>
+<span class="n">celery</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;celery&#39;</span><span class="p">)</span>
+<span class="n">basic_cache</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;.cache.basic_cache&#39;</span><span class="p">,</span> <span class="s1">&#39;argoss_libs&#39;</span><span class="p">)</span>
+<span class="n">helpers</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;.helpers&#39;</span><span class="p">,</span> <span class="s1">&#39;argoss_libs.cache&#39;</span><span class="p">)</span>
+<span class="n">snmp_nagios</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;.snmp.snmp_nagios&#39;</span><span class="p">,</span> <span class="s1">&#39;argoss_libs&#39;</span><span class="p">)</span>
+<span class="n">nagios</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;nagiosplugin&#39;</span><span class="p">)</span>
+<span class="n">sondes</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;sondes&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TaskCallback"><a class="viewcode-back" href="../celery_tasks.html#celery_tasks.TaskCallback">[docs]</a><span class="k">class</span> <span class="nc">TaskCallback</span><span class="p">(</span><span class="n">celery</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Task class which extends Celery Base Task class.</span>
+
+<span class="sd">    Static Class params changed:</span>
+
+<span class="sd">    :param expires: Task Expiration in queue if not launched in seconds</span>
+<span class="sd">    :param db_expires: Redis Task will expire in given time in seconds</span>
+<span class="sd">    :param cache: Initialized Redis management module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">expires</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">db_expires</span> <span class="o">=</span> <span class="mi">600</span>
+
+    <span class="n">cache</span> <span class="o">=</span> <span class="n">basic_cache</span><span class="o">.</span><span class="n">Cache</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TaskCallback.on_success"><a class="viewcode-back" href="../celery_tasks.html#celery_tasks.TaskCallback.on_success">[docs]</a>    <span class="k">def</span> <span class="nf">on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retval</span><span class="p">,</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Success handler.</span>
+
+<span class="sd">        Run by the worker if the task executes successfully.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">           retval (Any): The return value of the task.</span>
+<span class="sd">           task_id (str): Unique id of the executed task.</span>
+<span class="sd">           args (Tuple): Original arguments for the executed task.</span>
+<span class="sd">           kwargs (Dict): Original keyword arguments for the executed task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           None: The return value of this handler is ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">retval</span><span class="p">,</span>
+            <span class="s1">&#39;task_id&#39;</span><span class="p">:</span> <span class="n">task_id</span><span class="p">,</span>
+            <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="n">args</span><span class="p">,</span>
+            <span class="s1">&#39;kwargs&#39;</span><span class="p">:</span> <span class="n">kwargs</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set_pickled_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response_key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">expire</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db_expires</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TaskCallback.on_failure"><a class="viewcode-back" href="../celery_tasks.html#celery_tasks.TaskCallback.on_failure">[docs]</a>    <span class="k">def</span> <span class="nf">on_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">einfo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Error handler.</span>
+
+<span class="sd">        This is run by the worker when the task fails.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            exc (Exception): The exception raised by the task.</span>
+<span class="sd">            task_id (str): Unique id of the failed task.</span>
+<span class="sd">            args (Tuple): Original arguments for the task that failed.</span>
+<span class="sd">            kwargs (Dict): Original keyword arguments for the task that failed.</span>
+<span class="sd">            einfo (~billiard.einfo.ExceptionInfo): Exception information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None: The return value of this handler is ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="s1">&#39;3:</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+            <span class="s1">&#39;task_id&#39;</span><span class="p">:</span> <span class="n">task_id</span><span class="p">,</span>
+            <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="n">args</span><span class="p">,</span>
+            <span class="s1">&#39;kwargs&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">,</span>
+            <span class="s1">&#39;einfo&#39;</span><span class="p">:</span> <span class="n">einfo</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set_pickled_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response_key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">expire</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db_expires</span><span class="p">)</span></div></div>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="n">TaskCallback</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">call_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Celery task to make a SNMP method async call.</span>
+
+<span class="sd">    :param self: Class</span>
+<span class="sd">    :param params: Params passed through command line as a list</span>
+<span class="sd">    :param method: Method name</span>
+<span class="sd">    :return: Pickled dict with response and Celery task data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">response_key</span> <span class="o">=</span> <span class="n">key</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cls</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;sondes.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span>
+            <span class="n">mth</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">helpers</span><span class="o">.</span><span class="n">camelize</span><span class="p">(</span><span class="n">method</span><span class="p">))(</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">result_code</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">mth</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">:</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result_code</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;3:Error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span>
+
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">:</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;No method implemented!&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@snmp_nagios</span><span class="o">.</span><span class="n">guarded</span><span class="p">()</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../celery_tasks.html#celery_tasks.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates Nagios context elements and launches Nagios check</span>
+
+<span class="sd">    :param cls: Initialized Method class</span>
+<span class="sd">    :return: Nagios check response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">resources</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Creating Context Params array to pass to Nagiosplugin check function</span>
+    <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">perfdata</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">return_value</span><span class="p">:</span>
+            <span class="n">CONTEXT</span> <span class="o">=</span> <span class="n">nagios</span><span class="o">.</span><span class="n">ScalarContext</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
+                <span class="n">CONTEXT</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">context</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;alert&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">resources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CONTEXT</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">pargs</span><span class="o">.</span><span class="n">warning</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">pargs</span><span class="o">.</span><span class="n">critical</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CONTEXT</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="c1"># Calling Nagiosplugin Check function to get translated monitoring data</span>
+    <span class="n">check</span> <span class="o">=</span> <span class="n">snmp_nagios</span><span class="o">.</span><span class="n">SnmpCheck</span><span class="p">(</span>
+        <span class="n">cls</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">resources</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">check</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">pargs</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Navickas Aurimas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

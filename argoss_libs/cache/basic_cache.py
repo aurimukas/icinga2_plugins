@@ -6,7 +6,6 @@
     Date last modified: 19/10/2016 11:53
     Python Version: 3.5.2
 """
-
 import redis
 import hashlib
 from .helpers import pickle_data, unpickle_data, decode_from_b
@@ -18,6 +17,7 @@ __version__ = "1"
 __email__ = "aurimas.navickas-prestataire@laposte.fr"
 __maintainer__ = "Aurimas NAVICKAS"
 __status__ = "Dev"
+__package__ = 'cache'
 
 
 class Cache:
@@ -27,7 +27,7 @@ class Cache:
         self.port = kwargs['port'] if 'port' in kwargs else redis_cfg['port']
         self.db = kwargs['db'] if 'db' in kwargs else redis_cfg['db']
         pool = redis.ConnectionPool(host=self.host, port=self.port, db=self.db)
-        self.redis = redis.StrictRedis(connection_pool=pool, decode_responses=True)
+        self.redis = redis.Redis(connection_pool=pool, decode_responses=True)
 
     def delete(self, key):
         try:
@@ -53,9 +53,9 @@ class Cache:
         if key and field:
             return decode_from_b(self.redis.hget(key, field))
 
-    def set_pickled_dict(self, key, value):
+    def set_pickled_dict(self, key, value, expire=None, protocol=2):
         if key and value:
-            self.set_value(key, pickle_data(value))
+            self.set_value(key, pickle_data(value, protocol=protocol), ex=expire)
 
     def get_pickled_dict(self, key):
         try:
@@ -89,9 +89,17 @@ class Cache:
             return self.redis.sismember(key, value)
         return None
 
-    def add_to_list(self, key, *value):
+    def add_to_set(self, key, *value):
         if key:
             return self.redis.sadd(key, *value)
+        return None
+
+    def add_to_list(self, key, *value, append=True):
+        if key:
+            if append:
+                return self.redis.rpush(key, *value)
+            else:
+                return self.redis.lpush(key, *value)
         return None
 
     def scan_data(self, match='*'):

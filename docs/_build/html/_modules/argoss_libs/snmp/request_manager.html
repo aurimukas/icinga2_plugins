@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>argoss_libs.snmp.request_manager &#8212; DISIT  documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="DISIT  documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for argoss_libs.snmp.request_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: UTF-8</span>
+<span class="sd">&quot;&quot;&quot; Request Manager module</span>
+<span class="sd">Request Manager which manages all method calls to get SNMP monitoring data from cache or from the Machine.</span>
+
+<span class="sd">File name: request_manager.py</span>
+<span class="sd">Author: Aurimas NAVICKAS</span>
+<span class="sd">Date created: 19/10/2016</span>
+<span class="sd">Python Version: 3.5.2</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="n">argparse</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;argparse&#39;</span><span class="p">)</span>
+<span class="n">pd_class</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;argoss_libs.snmp.perfdata&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.toolkit</span> <span class="k">import</span> <span class="n">SNMPToolkit</span>
+
+<span class="n">basic_cache</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;argoss_libs.cache.basic_cache&#39;</span><span class="p">)</span>
+<span class="n">helper</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;.helpers&#39;</span><span class="p">,</span> <span class="s1">&#39;argoss_libs.cache&#39;</span><span class="p">)</span>
+<span class="n">nagios</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;nagiosplugin&#39;</span><span class="p">)</span>
+<span class="n">pandas</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;pandas&#39;</span><span class="p">)</span>
+<span class="n">np</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;nagiosplugin&#39;</span><span class="p">)</span>
+<span class="n">logging</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;logging&#39;</span><span class="p">)</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;nagiosplugin&#39;</span><span class="p">)</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aurimas NAVICKAS&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, DISIT, La Poste, France&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1&quot;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;aurimas.navickas-prestataire@laposte.fr&quot;</span>
+<span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Aurimas NAVICKAS&quot;</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s2">&quot;Dev&quot;</span>
+
+
+<div class="viewcode-block" id="RequestManager"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager">[docs]</a><span class="k">class</span> <span class="nc">RequestManager</span><span class="p">(</span><span class="n">nagios</span><span class="o">.</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RequestManager class to manage every SNMP call to host/equipment or getting info from REDIS/Cache</span>
+
+<span class="sd">    :param INDEX_TTL: Time in seconds to keep index table cached</span>
+<span class="sd">    :param PERFDATA_TTL: Time in seconds to keep Perfdata table in cache</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">INDEX_TTL</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="n">PERFDATA_TTL</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">60</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">community</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">perfdata</span><span class="p">,</span> <span class="n">indexes</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class Initialization</span>
+
+<span class="sd">        :param host: hostname of the machine</span>
+<span class="sd">        :param port: port number of SNMP in the machine</span>
+<span class="sd">        :param community: SNMP community</span>
+<span class="sd">        :param version: SNMP version (1, 2c, 3)</span>
+<span class="sd">        :param *args: extra arguments</span>
+<span class="sd">        :param **kwargs: extra keyword args</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">perfdata</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">indexes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Need Perdata and/or Indexes to create a RequestManager Class&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">community</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span> <span class="o">=</span> <span class="n">perfdata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span> <span class="o">=</span> <span class="n">indexes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">basic_cache</span><span class="o">.</span><span class="n">Cache</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indexes_key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:indexes&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perfdata_key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:perfdata&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+
+<div class="viewcode-block" id="RequestManager.update_indexes"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.update_indexes">[docs]</a>    <span class="k">def</span> <span class="nf">update_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_from_host</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to update indexes using cache or SNMP call</span>
+
+<span class="sd">        :parameter update_from_host: bool which force to update indexes from Machine&#39;s SNMP</span>
+<span class="sd">        :return: Updated indexes dict with index values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">update_from_host</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_indexes_from_host</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">]:</span>
+            <span class="n">exist</span><span class="p">,</span> <span class="n">contains</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">check_if_exists_and_contains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes_key</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">exist</span> <span class="ow">and</span> <span class="n">contains</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">update_from_host</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_indexes</span><span class="p">(</span><span class="n">update_from_host</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">np</span><span class="o">.</span><span class="n">CheckError</span><span class="p">(</span><span class="s1">&#39;Error while fetching Indexes. Label: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">label</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get_hash_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes_key</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestManager.update_performance_data"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.update_performance_data">[docs]</a>    <span class="k">def</span> <span class="nf">update_performance_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_update_perfdata_from_host</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">update_indexes</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to update performance data dictionary from cache or SNMP</span>
+
+<span class="sd">        :param force_update_perfdata_from_host: Bool which tells to update perfdata from SNMP</span>
+<span class="sd">        :param update_indexes: Do we need to update indexes while updating perfdata</span>
+
+<span class="sd">        :return: Updates Perfdata and indexes (if True) in class variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">update_indexes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_indexes</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">force_update_perfdata_from_host</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_perfdata_from_host</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">index_label</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">perfdata_key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perfdata_key</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">oid</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">oid</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">exist</span><span class="p">,</span> <span class="n">contains</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">check_if_exists_and_contains</span><span class="p">(</span><span class="n">perfdata_key</span><span class="p">,</span>
+                                                                      <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="n">pd</span><span class="o">.</span><span class="n">index_label</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">exist</span> <span class="ow">and</span> <span class="n">contains</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">update_indexes</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_get_indexes_from_host</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_perfdata_from_host</span><span class="p">()</span>
+                <span class="n">exist</span><span class="p">,</span> <span class="n">contains</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">check_if_exists_and_contains</span><span class="p">(</span><span class="n">perfdata_key</span><span class="p">,</span>
+                                                                          <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="n">pd</span><span class="o">.</span><span class="n">index_label</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">exist</span> <span class="ow">or</span> <span class="n">contains</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">np</span><span class="o">.</span><span class="n">CheckError</span><span class="p">(</span><span class="s1">&#39;Error While trying to fetch data for perfdata </span><span class="si">%s</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="n">pd</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get_hash_value</span><span class="p">(</span><span class="n">perfdata_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="n">pd</span><span class="o">.</span><span class="n">index_label</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RequestManager.update_perfdata_from_dataframe"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.update_perfdata_from_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">update_perfdata_from_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataFrame</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates class perfdata from Pandas Dataframe object.</span>
+
+<span class="sd">        :param dataFrame: Pandas dataframe object</span>
+<span class="sd">        :param index: Line(index) number in dataframe which we need to use</span>
+<span class="sd">        :return: updates class variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span><span class="p">:</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dataFrame</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">][</span><span class="n">index</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_indexes_from_host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to update indexes from SNMP call</span>
+<span class="sd">        :param indexes: indexes dictionary</span>
+<span class="sd">        :return: True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;oids&#39;</span><span class="p">]):</span>
+            <span class="n">indexes_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">snmp_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="s1">&#39;oids&#39;</span><span class="p">])</span>
+            <span class="n">pipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">pipeline</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">indexes_request</span><span class="p">:</span>
+                <span class="n">pipe</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes_key</span><span class="p">,</span> <span class="n">helper</span><span class="o">.</span><span class="n">strip_string</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">oid_index</span><span class="p">)</span>
+
+            <span class="n">pipe</span><span class="o">.</span><span class="n">expire</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INDEX_TTL</span><span class="p">)</span>
+            <span class="n">pipe</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">raise_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_update_perfdata_from_host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to update performance data table in cache using SNMP</span>
+<span class="sd">        :param perfdata: performance data dict</span>
+<span class="sd">        :return: bool - successfully updated?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">oids</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">oid</span> <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">oid</span><span class="p">]</span>
+
+        <span class="n">perfdata_requests</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">snmp_table</span><span class="p">(</span><span class="n">oids</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">perfdata_requests</span><span class="p">):</span>
+            <span class="n">pipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">pipeline</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">perfdata_requests</span><span class="p">:</span>
+                <span class="n">perfdata_key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perfdata_key</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">oid</span><span class="p">)</span>
+                <span class="n">pipe</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="n">perfdata_key</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">oid_index</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">pipe</span><span class="o">.</span><span class="n">expire</span><span class="p">(</span><span class="n">perfdata_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PERFDATA_TTL</span><span class="p">)</span>
+            <span class="n">pipe</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="RequestManager.yield_metrics"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.yield_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">yield_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Yield Nagios Metric from class perfdata</span>
+
+<span class="sd">        :return: Yields Nagios Metrics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># _log.info(&#39;Yield_Metrics method perfdata&#39;)</span>
+        <span class="c1"># _log.debug(self.perfdata)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">return_value</span><span class="p">:</span>
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">Metric</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">pd</span><span class="p">(),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">np</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">CheckError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="RequestManager.eval_expressions"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.eval_expressions">[docs]</a>    <span class="k">def</span> <span class="nf">eval_expressions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates given expressions using Pandas Data Frame Object</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sorted_perfdata</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
+        <span class="c1"># _log.info(&#39;Creating Sorted perfdata&#39;)</span>
+        <span class="c1"># _log.debug(sorted_perfdata)</span>
+
+        <span class="c1"># _log.info(&#39;Preparing DataFrame cols and values&#39;)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="p">()</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">sorted_perfdata</span><span class="p">),))</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">key</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">sorted_perfdata</span><span class="p">)</span>
+        <span class="c1"># _log.info(&#39;Cols&#39;)</span>
+        <span class="c1"># _log.debug(cols)</span>
+        <span class="c1"># _log.info(&#39;Values&#39;)</span>
+        <span class="c1"># _log.debug(values)</span>
+
+        <span class="c1"># _log.info(&#39;Creating Pandas DataFrame&#39;)</span>
+        <span class="n">data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+        <span class="c1"># _log.debug(dataFrame)</span>
+
+        <span class="c1"># _log.info(&#39;Pandas Expressions evaluation&#39;)</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">sorted_perfdata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">calculation</span><span class="p">:</span>
+                <span class="n">data_frame</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">calculation</span><span class="p">),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># _log.info(&#39;DataFrame after calculations&#39;)</span>
+                <span class="c1"># _log.debug(dataFrame)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_perfdata_from_dataframe</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestManager.apply_cached_perfdata"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.apply_cached_perfdata">[docs]</a>    <span class="k">def</span> <span class="nf">apply_cached_perfdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cached_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies Cache data from redis to class perfdata List to evaluate calculations later</span>
+
+<span class="sd">        :param cached_data: Cached data dictionary to apply to class perfdata</span>
+<span class="sd">        :return: Applies class perfdata variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">cached_data</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">pd_class</span><span class="o">.</span><span class="n">PerfDataItem</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">perfdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="RequestManager.prepare_cache_perfdata"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.prepare_cache_perfdata">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_cache_perfdata</span><span class="p">(</span><span class="n">perfdata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepares class perfdata variable to be cached in Redis.</span>
+
+<span class="sd">        :param perfdata: Class perfdata variable</span>
+<span class="sd">        :return: List of dictionaries of perfdata attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">perfdata</span><span class="p">:</span>
+            <span class="n">c_pd</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_cache&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">key</span><span class="p">),</span>
+                <span class="s1">&#39;oid&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">oid</span><span class="p">,</span>
+                <span class="s1">&#39;value_type&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">value_type</span><span class="p">,</span>
+                <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">value</span>
+            <span class="p">}</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_pd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="RequestManager.default_args"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.RequestManager.default_args">[docs]</a>    <span class="k">def</span> <span class="nf">default_args</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">161</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">warning</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="mf">90.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Static Method which prepares mostly used args for the methods</span>
+
+<span class="sd">        :param description: Description of the method which uses this args</span>
+<span class="sd">        :param port: Machine&#39;s SNMP port</span>
+<span class="sd">        :param version: SNMP version</span>
+<span class="sd">        :param warning: warning level</span>
+<span class="sd">        :param critical: critical level</span>
+<span class="sd">        :return: Object with defined args</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">argp</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span>
+        <span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--host&#39;</span><span class="p">,</span> <span class="s1">&#39;-H&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Host target&#39;</span><span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--port&#39;</span><span class="p">,</span> <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Port&#39;</span><span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--version&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP Version&#39;</span><span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--community&#39;</span><span class="p">,</span> <span class="s1">&#39;-C&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SNMP Community&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;bornan&#39;</span><span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--warning&#39;</span><span class="p">,</span> <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">warning</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Warning&#39;</span><span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--critical&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">critical</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Critical&#39;</span><span class="p">)</span>
+        <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="s1">&#39;-V&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">argp</span></div></div>
+
+
+<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../../argoss_libs.snmp.html#argoss_libs.snmp.request_manager.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">SNMPToolkit</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extended EasySNMP class to make queries to SNMP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">community</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class initialization&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Request</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">community</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">basic_cache</span><span class="o">.</span><span class="n">Cache</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Navickas Aurimas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

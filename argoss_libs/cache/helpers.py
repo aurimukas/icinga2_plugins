@@ -16,26 +16,62 @@ __maintainer__ = "Aurimas NAVICKAS"
 __status__ = "Dev"
 
 
-def pickle_data(data=None):
+def pickle_data(data=None, protocol=2):
+    """
+    Pickle data
+
+    :param data: Data to pickle
+    :param protocol: Pickle compression protocol
+    :return: Pickled data
+    """
     if data:
-        return cPickle.dumps(data)
+        return cPickle.dumps(data, protocol=protocol)
 
 
 def unpickle_data(data=None):
+    """
+    Unpickle data
+
+    :param data: Pickled data
+    :return: Unpickled data
+    """
     if data:
         return cPickle.loads(data)
 
 
-def get_unique_items_from_lists(*lists):
-    result = []
-    if len(lists):
-        for l in lists:
-            result = list(set(l) - set(result))
-
-    return result
-
 def decode_from_b(value=None):
+    """
+    Decode Bytes Value to String
+
+    :param value: Bytes value
+    :return: Decoded String
+    """
     if value and isinstance(value, bytes):
         return value.decode('unicode_escape')
 
     return value
+
+
+def strip_string(s):
+    """
+    Strip strings from non-ASCII chars
+
+    :param s: String to strip
+    :return: Stripped string
+    """
+    return "".join(i for i in s if 31 < ord(i) < 127)
+
+
+def camelize(phrase):
+    """
+    Convert string to Camel Case string
+
+    :param phrase: String to Camel Case
+    :return: Camel Case string
+
+    Example:
+
+    >>> camelize("string_to_camelize")
+    "StringToCamelize"
+    """
+    return ''.join(x.capitalize() or '_' for x in phrase.split('_'))
